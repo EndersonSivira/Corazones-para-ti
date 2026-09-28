@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Ti ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0826, #3a0031, #1a0826);
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        /* Contenedor del mensaje */
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 85%;
+            width: 400px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            z-index: 10;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .card h1 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #ff769c;
+            text-shadow: 0 0 10px rgba(255, 118, 156, 0.5);
+        }
+
+        .card p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .hint {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        /* Botón de reproducción de música */
+        .music-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 20;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Animación de corazones flotantes */
+        .heart {
+            position: absolute;
+            top: -10%;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+
+        /* Animación de corazones laterales (Shake) */
+        .side-heart {
+            position: absolute;
+            user-select: none;
+            pointer-events: none;
+            z-index: 100;
+            font-size: 24px;
+            animation: burst 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes burst {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(0.5);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(1.5);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Botón para alternar la música -->
+    
+
+    <!-- Reproductor de audio con música alojada en GitHub -->
+    <audio id="bgMusic" loop preload="metadata">
+        <source src="https://github.com/EndersonSivira/Corazones-para-ti/raw/main/JVKE%20-%20this%20is%20what%20falling%20in%20love%20feels%20like%20(Lyrics)(M4A_128K).m4a" type="audio/mpeg">
+        Tu navegador no soporta el reproductor de audio.
+    </audio>
+
+    <!-- Contenedor del mensaje -->
+    <div class="card" onclick="nextMessage()">
+        <h1>🖤 You are 🖤</h1>
+        <h1>🖤 my special 🖤</h1>
+        <p id="message">Toca la pantalla o agita el teléfono...</p>
+        <div class="hint">(Toca para cambiar el mensaje • ¡Agita para una sorpresa!)</div>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN DEL SEGUNDO DE INICIO ---
+        const START_TIME = 10; // <-- Cambia este número al segundo exacto donde quieres que empiece
+
+        // --- 1. Mensajes Románticos ---
+        const messages = [
+            "Cada día a tu lado es mi momento favorito.",
+            "Eres la casualidad más bonita que me ha pasado.",
+            "Si supieras lo mucho que sonrío cuando me hablas...",
+            "No necesito mil razones para sonreír, solo te necesito a ti.",
+            "Gracias por iluminar mi mundo todos los días.",
+            "Eres mi lugar favorito en el planeta."
+        ];
+        
+        let msgIndex = 0;
+        const messageEl = document.getElementById('message');
+
+        function nextMessage() {
+            messageEl.style.opacity = '0';
+            setTimeout(() => {
+                msgIndex = (msgIndex + 1) % messages.length;
+                messageEl.textContent = messages[msgIndex];
+                messageEl.style.opacity = '1';
+            }, 500);
+        }
+
+        // --- 2. Música ---
+        const audio = document.getElementById('bgMusic');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                audio.pause();
+                document.getElementById('musicBtn').textContent = '🔇';
+            } else {
+                if (audio.currentTime === 0) {
+                    audio.currentTime = START_TIME;
+                }
+                audio.play();
+                document.getElementById('musicBtn').textContent = '🎵';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Si la canción hace un loop, vuelve a iniciar en START_TIME en lugar de 0
+        audio.addEventListener('ended', function() {
+            audio.currentTime = START_TIME;
+            audio.play();
+        });
+
+        // Reproducir música al primer toque del usuario
+        document.body.addEventListener('click', function() {
+            if (!isPlaying) {
+                audio.currentTime = START_TIME; // Establecer el segundo de inicio
+                audio.play().then(() => {
+                    isPlaying = true;
+                    document.getElementById('musicBtn').textContent = '🎵';
+                }).catch(() => {});
+            }
+        }, { once: true });
+
+        // --- 3. Corazones Flotantes de Colores ---
+        const colors = ['#ff4d4d', '#ff769c', '#ffb3c6', '#e056fd', '#f0932b', '#badc58', '#7ed6df'];
+
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            
+            heart.style.left = Math.random() * 100 + 'vw';
+            
+            const size = Math.random() * 20 + 15;
+            heart.style.fontSize = size + 'px';
+            
+            heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            const duration = Math.random() * 3 + 3;
+            heart.style.animationDuration = duration + 's';
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        setInterval(createFloatingHeart, 300);
+
+        // --- 4. Corazones Rojos desde los Laterales (Al Agitar) ---
+        function spawnSideHearts() {
+            const countPerSide = 12;
+
+            for (let i = 0; i < countPerSide; i++) {
+                createSideHeart(0, window.innerHeight * Math.random(), 1);
+            }
+
+            for (let i = 0; i < countPerSide; i++) {
+                createSideHeart(window.innerWidth, window.innerHeight * Math.random(), -1);
+            }
+        }
+
+        function createSideHeart(x, y, direction) {
+            const heart = document.createElement('div');
+            heart.classList.add('side-heart');
+            heart.innerHTML = '❤️';
+            heart.style.color = '#ff0033';
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+
+            const tx = direction * (Math.random() * 200 + 100);
+            const ty = (Math.random() - 0.5) * 200;
+
+            heart.style.setProperty('--tx', `${tx}px`);
+            heart.style.setProperty('--ty', `${ty}px`);
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 1500);
+        }
+
+        // Detección de Agitación (Shake)
+        let lastX, lastY, lastZ;
+        let lastTime = 0;
+        const shakeThreshold = 15;
+
+        function handleMotion(e) {
+            const current = e.accelerationIncludingGravity;
+            if (!current) return;
+
+            const currentTime = Date.now();
+            if ((currentTime - lastTime) > 100) {
+                const diffTime = currentTime - lastTime;
+                lastTime = currentTime;
+
+                if (lastX !== undefined) {
+                    const deltaX = Math.abs(current.x - lastX);
+                    const deltaY = Math.abs(current.y - lastY);
+                    const deltaZ = Math.abs(current.z - lastZ);
+
+                    const speed = (deltaX + deltaY + deltaZ) / diffTime * 1000;
+
+                    if (speed > shakeThreshold) {
+                        spawnSideHearts();
+                    }
+                }
+
+                lastX = current.x;
+                lastY = current.y;
+                lastZ = current.z;
+            }
+        }
+
+        function initSensors() {
+            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                DeviceMotionEvent.requestPermission()
+                    .then(response => {
+                        if (response === 'granted') {
+                            window.addEventListener('devicemotion', handleMotion, false);
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                window.addEventListener('devicemotion', handleMotion, false);
+            }
+        }
+
+        window.addEventListener('click', initSensors, { once: true });
+    </script>
+</body>
+</html>
